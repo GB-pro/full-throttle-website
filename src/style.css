@@ -24,7 +24,7 @@ body {
   font-family: var(--font-tech);
   overflow: hidden;
   width: 100vw;
-  height: 100dvh;
+  height: 100dvh; /* dvhでスマホのアドレスバー対策 */
 }
 
 #app {
@@ -99,12 +99,54 @@ body {
 .screen {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
+  /* 以下のFlex設定はCanvas画面では無効化するため調整 */
   display: flex; flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 40px 0;
   box-sizing: border-box;
   z-index: 10;
+}
+
+/* イントロ画面固有 */
+#introScreen {
+  padding: 40px 0;
+}
+
+/* アプリ画面固有（★重要：レイアウト修正） */
+#appScreen {
+  justify-content: center; /* 垂直中央 */
+  padding: 0; /* パディングなし */
+  overflow: hidden; /* はみ出し禁止 */
+  background: #000;
+}
+
+/* --- キャンバス（★重要：レスポンシブ対応） --- */
+#mainCanvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 完全中央配置 */
+  
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  
+  object-fit: contain; /* アスペクト比を維持して収める */
+  z-index: 1;
+}
+
+/* --- アプリ操作ボタン --- */
+.app-controls {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  pointer-events: auto;
+  z-index: 20; /* キャンバスより上 */
 }
 
 /* --- タイトル --- */
@@ -163,7 +205,6 @@ body {
   color: var(--c-cyan); font-size: 14px; margin-bottom: 5px; letter-spacing: 2px;
 }
 
-/* 2つの入力を縦に並べる */
 .input-row { 
   display: flex; 
   flex-direction: column; 
@@ -280,16 +321,11 @@ body {
 
 .status-text {
   color: #666; font-size: 12px; margin-top: 5px;
-  text-align: center; /* ★変更: 中央揃え */
+  text-align: center;
   width: 100%;
   display: block;
 }
 
-/* --- App Screen Controls --- */
-.app-controls {
-  position: absolute; bottom: 30px;
-  display: flex; gap: 20px; pointer-events: auto;
-}
 .hud-btn {
   background: rgba(0,0,0,0.8);
   border: 1px solid #fff;

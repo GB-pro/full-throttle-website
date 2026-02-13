@@ -392,7 +392,10 @@ export class CanvasLogic {
       ctx.save();
       ctx.translate(pX, pY);
       ctx.rotate(pConf.angle);
-      const pSize = baseFontSize * 3.5 * fitScale;
+
+// ★修正: 3.5 は大きすぎるため 2.0 に変更
+      const pSize = baseFontSize * 2.0 * fitScale;
+      
       ctx.font = `${pSize}px 'KitchenGothic'`;
       ctx.textAlign = "center";
       ctx.fillStyle = "#000000";
