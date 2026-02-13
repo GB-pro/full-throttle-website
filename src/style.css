@@ -126,7 +126,7 @@ body {
   width: auto;
   height: auto;
   object-fit: contain; 
-  z-index: 1;
+  z-index: 0; /* ★ 画像を後ろに設定 */
 }
 
 /* --- タイトル --- */
@@ -279,27 +279,29 @@ body {
 /* --- App Screen Controls (細い画面対応) --- */
 .app-controls {
   position: absolute; 
-  bottom: 20px;
+  bottom: 30px; /* ★ Androidの下部バー対策で少し上に */
   left: 0;
   width: 100%;
   display: flex; 
   flex-wrap: wrap; /* 幅が足りない場合は折り返す */
   justify-content: center; 
-  gap: 10px; /* 隙間を詰める */
+  gap: 10px; 
   pointer-events: auto;
   padding: 0 10px;
   box-sizing: border-box;
+  z-index: 100; /* ★ 必須：ボタンを最前面に出す！ */
 }
+
 .hud-btn {
   background: rgba(0,0,0,0.8);
   border: 1px solid #fff;
   color: #fff;
-  padding: 10px 5px; /* 横パディングを減らす */
+  padding: 10px 5px; 
   font-family: var(--font-tech);
-  font-size: 14px; /* 少し小さく */
+  font-size: 14px; 
   cursor: pointer;
   border-radius: 0;
-  flex: 1 1 calc(50% - 10px); /* 半分ずつ配置 */
+  flex: 1 1 calc(50% - 10px); 
   max-width: 200px;
   text-align: center;
 }
@@ -318,7 +320,7 @@ body {
 .cyber-modal {
   background: #000;
   border: 2px solid var(--c-magenta);
-  padding: 30px 20px; /* 横パディングを調整 */
+  padding: 30px 20px; 
   width: 90%; max-width: 350px;
   box-sizing: border-box;
   text-align: center;
@@ -345,9 +347,9 @@ body {
   border: 1px solid var(--c-cyan) !important;
   color: var(--c-cyan) !important;
   border-radius: 0 !important;
-  width: 100%; /* 横幅いっぱいに */
+  width: 100%; /* ★横幅いっぱいに */
   box-sizing: border-box;
-  margin: 10px 0; /* 縦に並べる */
+  margin: 10px 0; /* ★縦に並べる */
   padding: 12px;
   font-size: 16px;
 }
