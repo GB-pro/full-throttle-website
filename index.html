@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FullThrottle Web</title>
+  </head>
+  <body>
+    <div class="scanlines"></div>
+    
+    <div id="app">
+      <div class="hud-overlay">
+        <div class="hud-corner top-left"></div>
+        <div class="hud-corner top-right"></div>
+        <div class="hud-corner bottom-left"></div>
+        <div class="hud-corner bottom-right"></div>
+        <div class="hud-line top"></div>
+        <div class="hud-line bottom"></div>
+      </div>
+
+      <div id="introScreen" class="screen">
+        <div id="titleWrapper" class="title-wrapper glitch-container">
+          <img id="titleImage" src="/images/FullThrottle.png" alt="Full Throttle" class="title-img glitch-target">
+        </div>
+
+        <div class="bottom-action-area">
+          <button id="mainPlayBtn" class="cyber-btn play-btn hidden">
+            <span class="btn-text">SYSTEM START</span>
+          </button>
+
+          <div id="inputSection" class="hidden">
+            <p class="annotation">INPUT TEXT (A & B)</p>
+            <div class="input-row">
+              <input type="text" id="textInputA" class="cyber-input" placeholder="A: NORMAL TEXT" maxlength="15">
+              <input type="text" id="textInputB" class="cyber-input" placeholder="B: SCREAM TEXT" maxlength="15">
+              <button id="textDecideBtn" class="cyber-btn-small">SET SEQUENCE</button>
+            </div>
+          </div>
+
+          <div id="fileSection">
+            <input type="file" id="fileInput" accept="image/*, video/*" style="display: none;">
+            
+            <button id="introStartBtn" class="cyber-list-btn">
+              <div class="track-info">
+                <span class="artist">芹澤優</span>
+                <span class="song">TIMELESS POWER</span>
+              </div>
+              <span class="play-icon">▶</span>
+            </button>
+
+            <button id="introStartBtn2" class="cyber-list-btn" style="display: none;">
+              <span class="track-num">02</span>
+              <div class="track-info">
+                <span class="artist">STARKIDS</span>
+                <span class="song">NEUROBEAT</span>
+              </div>
+            </button>
+
+            <button id="customFileBtn" class="cyber-sub-btn hidden">
+              LOAD MEDIA<br>
+              <span class="btn-sub-text">画像または動画を読み込み</span>
+            </button>
+            <p id="fileSubText" class="status-text hidden">WAITING FOR MEDIA...</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="appScreen" class="screen hidden">
+        <canvas id="mainCanvas"></canvas>
+        
+        <div class="app-controls">
+          <button id="backBtn" class="hud-btn">
+            <span class="hud-bracket">[</span> BACK <span class="hud-bracket">]</span>
+          </button>
+          <button id="shareBtn" class="hud-btn highlight">
+            <span class="hud-bracket">[</span> REC & SHARE <span class="hud-bracket">]</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="recordingModal">
+      <div class="modal-content cyber-modal">
+        <div class="modal-header">
+           <img src="/images/Recording.png" alt="REC" class="rec-img">
+           <span class="blinking-dot">●</span>
+        </div>
+        <div id="recordingStatus">INITIALIZING...</div>
+        <div class="loading-bar"><div class="loading-progress"></div></div>
+        <button id="cancelBtn" class="cyber-btn-cancel">CANCEL</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
