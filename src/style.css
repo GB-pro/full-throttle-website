@@ -24,7 +24,7 @@ body {
   font-family: var(--font-tech);
   overflow: hidden;
   width: 100vw;
-  height: 100dvh; /* dvhでスマホのアドレスバー対策 */
+  height: 100dvh; 
 }
 
 #app {
@@ -99,7 +99,6 @@ body {
 .screen {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
-  /* 以下のFlex設定はCanvas画面では無効化するため調整 */
   display: flex; flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -107,46 +106,27 @@ body {
   z-index: 10;
 }
 
-/* イントロ画面固有 */
-#introScreen {
-  padding: 40px 0;
-}
+#introScreen { padding: 40px 0; }
 
-/* アプリ画面固有（★重要：レイアウト修正） */
 #appScreen {
-  justify-content: center; /* 垂直中央 */
-  padding: 0; /* パディングなし */
-  overflow: hidden; /* はみ出し禁止 */
+  justify-content: center;
+  padding: 0; 
+  overflow: hidden; 
   background: #000;
 }
 
-/* --- キャンバス（★重要：レスポンシブ対応） --- */
+/* --- キャンバス --- */
 #mainCanvas {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* 完全中央配置 */
-  
+  transform: translate(-50%, -50%); 
   max-width: 100%;
   max-height: 100%;
   width: auto;
   height: auto;
-  
-  object-fit: contain; /* アスペクト比を維持して収める */
+  object-fit: contain; 
   z-index: 1;
-}
-
-/* --- アプリ操作ボタン --- */
-.app-controls {
-  position: absolute;
-  bottom: 30px;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  pointer-events: auto;
-  z-index: 20; /* キャンバスより上 */
 }
 
 /* --- タイトル --- */
@@ -199,17 +179,9 @@ body {
   padding-bottom: 50px;
 }
 
-/* Input Styles */
 #inputSection { width: 90%; max-width: 400px; text-align: center; }
-.annotation {
-  color: var(--c-cyan); font-size: 14px; margin-bottom: 5px; letter-spacing: 2px;
-}
-
-.input-row { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 10px; 
-}
+.annotation { color: var(--c-cyan); font-size: 14px; margin-bottom: 5px; letter-spacing: 2px; }
+.input-row { display: flex; flex-direction: column; gap: 10px; }
 
 .cyber-input {
   width: 100%;
@@ -283,22 +255,9 @@ body {
   justify-content: center;
   line-height: 1.2;
 }
-.cyber-sub-btn:hover {
-  background: var(--c-magenta);
-  color: #000;
-  box-shadow: 0 0 15px var(--c-magenta);
-}
+.cyber-sub-btn:hover { background: var(--c-magenta); color: #000; box-shadow: 0 0 15px var(--c-magenta); }
+.btn-sub-text { font-size: 11px; font-family: sans-serif; opacity: 0.9; margin-top: 4px; letter-spacing: 0; font-weight: normal; }
 
-.btn-sub-text {
-  font-size: 11px;
-  font-family: sans-serif;
-  opacity: 0.9;
-  margin-top: 4px;
-  letter-spacing: 0;
-  font-weight: normal;
-}
-
-/* List Button */
 .cyber-list-btn {
   width: 100%; max-width: 350px;
   display: flex; align-items: center;
@@ -309,39 +268,43 @@ body {
   transition: 0.2s;
   text-align: left;
 }
-.cyber-list-btn:hover {
-  background: rgba(0,243,255,0.2);
-  border-color: var(--c-cyan);
-  transform: translateX(5px);
-}
+.cyber-list-btn:hover { background: rgba(0,243,255,0.2); border-color: var(--c-cyan); transform: translateX(5px); }
 .track-info { display: flex; flex-direction: column; flex: 1; padding-left: 10px; }
 .artist { font-size: 12px; color: #aaa; }
 .song { font-size: 16px; color: #fff; font-weight: bold; }
 .play-icon { font-size: 14px; color: var(--c-cyan); margin-left: 10px; }
 
-.status-text {
-  color: #666; font-size: 12px; margin-top: 5px;
-  text-align: center;
-  width: 100%;
-  display: block;
-}
+.status-text { color: #666; font-size: 12px; margin-top: 5px; text-align: center; width: 100%; display: block; }
 
+/* --- App Screen Controls (細い画面対応) --- */
+.app-controls {
+  position: absolute; 
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex; 
+  flex-wrap: wrap; /* 幅が足りない場合は折り返す */
+  justify-content: center; 
+  gap: 10px; /* 隙間を詰める */
+  pointer-events: auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
 .hud-btn {
   background: rgba(0,0,0,0.8);
   border: 1px solid #fff;
   color: #fff;
-  padding: 10px 20px;
+  padding: 10px 5px; /* 横パディングを減らす */
   font-family: var(--font-tech);
-  font-size: 16px;
+  font-size: 14px; /* 少し小さく */
   cursor: pointer;
   border-radius: 0;
+  flex: 1 1 calc(50% - 10px); /* 半分ずつ配置 */
+  max-width: 200px;
+  text-align: center;
 }
-.hud-btn.highlight {
-  border-color: var(--c-cyan);
-  color: var(--c-cyan);
-  box-shadow: 0 0 10px rgba(0,243,255,0.3);
-}
-.hud-bracket { opacity: 0.5; margin: 0 5px; }
+.hud-btn.highlight { border-color: var(--c-cyan); color: var(--c-cyan); box-shadow: 0 0 10px rgba(0,243,255,0.3); }
+.hud-bracket { opacity: 0.5; margin: 0 2px; }
 
 /* --- Modal --- */
 #recordingModal {
@@ -355,62 +318,37 @@ body {
 .cyber-modal {
   background: #000;
   border: 2px solid var(--c-magenta);
-  padding: 30px;
-  width: 80%; max-width: 400px;
+  padding: 30px 20px; /* 横パディングを調整 */
+  width: 90%; max-width: 350px;
+  box-sizing: border-box;
   text-align: center;
   box-shadow: 0 0 30px rgba(255,0,85,0.3);
   position: relative;
 }
-.cyber-modal::before {
-  content: ''; position: absolute; top: -5px; left: -5px; width: 10px; height: 10px; background: var(--c-magenta);
-}
-.cyber-modal::after {
-  content: ''; position: absolute; bottom: -5px; right: -5px; width: 10px; height: 10px; background: var(--c-magenta);
-}
+.cyber-modal::before { content: ''; position: absolute; top: -5px; left: -5px; width: 10px; height: 10px; background: var(--c-magenta); }
+.cyber-modal::after { content: ''; position: absolute; bottom: -5px; right: -5px; width: 10px; height: 10px; background: var(--c-magenta); }
 
-.modal-header {
-  color: var(--c-magenta); 
-  font-size: 18px; 
-  margin-bottom: 20px; 
-  border-bottom: 1px solid #333; 
-  padding-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
-.rec-img {
-  height: 50px;
-  vertical-align: middle;
-  padding: 5px;
-}
-
+.modal-header { color: var(--c-magenta); font-size: 18px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+.rec-img { height: 50px; vertical-align: middle; padding: 5px; }
 .blinking-dot { animation: blink 1s infinite; color: red; font-size: 24px; }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-.loading-bar {
-  width: 100%; height: 4px; background: #333; margin: 20px 0;
-  position: relative;
-}
-.loading-progress {
-  width: 0%; height: 100%; background: var(--c-cyan);
-  transition: width linear;
-}
+.loading-bar { width: 100%; height: 4px; background: #333; margin: 20px 0; position: relative; }
+.loading-progress { width: 0%; height: 100%; background: var(--c-cyan); transition: width linear; }
 
-.cyber-btn-cancel {
-  background: transparent; border: 1px solid #555; color: #888; padding: 8px 20px; cursor: pointer;
-}
+.cyber-btn-cancel { background: transparent; border: 1px solid #555; color: #888; padding: 8px 20px; cursor: pointer; }
 .cyber-btn-cancel:hover { border-color: #fff; color: #fff; }
 
+/* Result Modal Buttons (はみ出し防止) */
 .result-action-btn {
   background: transparent;
   border: 1px solid var(--c-cyan) !important;
   color: var(--c-cyan) !important;
   border-radius: 0 !important;
-  margin: 10px;
+  width: 100%; /* 横幅いっぱいに */
+  box-sizing: border-box;
+  margin: 10px 0; /* 縦に並べる */
+  padding: 12px;
+  font-size: 16px;
 }
-.result-action-btn:hover {
-  background: var(--c-cyan) !important;
-  color: #000 !important;
-}
+.result-action-btn:hover { background: var(--c-cyan) !important; color: #000 !important; }

@@ -37,7 +37,6 @@ let lastAudioTime = 0;
 let elapsedTime = 0;
 let lastTimestamp = 0;
 
-// ★変更箇所: パターン4と7を削除しました
 const layoutIds: LayoutId[] = [0, 1, 2, 3, 5, 6, 8, 9, 10, 11, 12, 13];
 
 let currentLayoutId: LayoutId = 0;
@@ -46,7 +45,6 @@ const layoutChangeInterval = 3417; // 1サイクルの長さ
 let displayText = ""; 
 let shrinkStartIndex = -1;
 
-// A/B用のベーステキスト
 let baseTextA = "";
 let baseTextB = "";
 
@@ -73,7 +71,6 @@ function updateTitle(imagePath: string) {
   titleImage.src = imagePath;
 }
 
-// B用の変異ロジック (Aには適用しない)
 function rebuildScreamTextB(): string {
   if (!baseTextB) return "";
 
@@ -95,10 +92,7 @@ function rebuildScreamTextB(): string {
 }
 
 function initScreamTexts(inputA: string, inputB: string) {
-  // Aはそのまま保持
   baseTextA = inputA;
-
-  // Bは変異計算用の準備
   const lastChar = inputB.slice(-1);
   let extendChar = '';
 
@@ -121,13 +115,10 @@ function initScreamTexts(inputA: string, inputB: string) {
   baseTextB = inputB;
   baseExtendCharB = extendChar;
   extendCountB = count;
-  
-  // 初期表示用に一旦計算
   displayText = baseTextA;
 }
 
-// サイクル管理用変数
-let lastPhase = -1; // 0: A, 1: B, 2: Break
+let lastPhase = -1;
 
 function animationLoop(timestamp: number) {
   if (!lastTimestamp) lastTimestamp = timestamp;
@@ -151,16 +142,15 @@ function animationLoop(timestamp: number) {
     }
     lastAudioTime = audioTime;
 
-    // --- サイクル制御 (A -> B -> Break) ---
     const cycleProgress = (elapsedTime % layoutChangeInterval) / layoutChangeInterval;
     let currentPhase = 0;
 
     if (cycleProgress < 0.45) {
-      currentPhase = 0; // A: Normal
+      currentPhase = 0; 
     } else if (cycleProgress < 0.90) {
-      currentPhase = 1; // B: Scream
+      currentPhase = 1; 
     } else {
-      currentPhase = 2; // Break: Blank
+      currentPhase = 2; 
     }
 
     if (currentPhase !== lastPhase) {
@@ -173,22 +163,18 @@ function animationLoop(timestamp: number) {
       }
 
       if (currentPhase === 0) {
-        // A表示
         displayText = baseTextA;
         shrinkStartIndex = -1; 
         currentPresetText = ""; 
       } else if (currentPhase === 1) {
-        // B表示
         displayText = rebuildScreamTextB();
         shrinkStartIndex = baseTextB.length; 
-        
         if (Math.random() < 0.5) {
             currentPresetText = presetTexts[Math.floor(Math.random() * presetTexts.length)];
         } else {
             currentPresetText = ""; 
         }
       } else {
-        // Break
         displayText = "";
         currentPresetText = "";
       }
@@ -217,7 +203,6 @@ async function startApp() {
   recentLayouts = [0];
   currentLayoutId = 0;
   currentPresetText = "";
-
   displayText = baseTextA;
 
   await AudioService.resumeContext();
@@ -231,7 +216,13 @@ async function startApp() {
 
 function goBack() {
   isPlaying = false;
-  AudioService.stopAndReset();
+  
+  // ★ iPhone ループ再生対策: 明示的にPauseしてから少し遅らせてReset
+  AudioService.pause();
+  setTimeout(() => {
+    AudioService.stopAndReset();
+  }, 50);
+
   if (isVideo && currentSource instanceof HTMLVideoElement) {
     currentSource.pause();
     currentSource.currentTime = 0;
@@ -239,19 +230,37 @@ function goBack() {
   
   introScreen.classList.remove('hidden');
   appScreen.classList.add('hidden');
-  
   mainPlayBtn.classList.add('hidden');
-  
   inputSection.classList.remove('hidden');
   customFileBtn.classList.remove('hidden');
   fileSubText.classList.remove('hidden');
-  
   introStartBtn.classList.add('hidden');
   introStartBtn2.classList.add('hidden');
 
   updateTitle('/images/FullThrottle.png');
   titleWrapper.classList.remove('blink-fast');
 }
+
+// ★ Android バックグラウンド再生対策
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    // 画面が隠れたら強制一時停止
+    if (isPlaying) {
+      AudioService.pause();
+      if (isVideo && currentSource instanceof HTMLVideoElement) {
+        currentSource.pause();
+      }
+    }
+  } else {
+    // 画面が戻ってきて、かつ録画中でなければ再開
+    if (isPlaying && !isRecording && appScreen.classList.contains('hidden') === false) {
+      AudioService.play();
+      if (isVideo && currentSource instanceof HTMLVideoElement) {
+        currentSource.play().catch(() => {});
+      }
+    }
+  }
+});
 
 // --- イベントリスナー ---
 function showInputScreen() {
@@ -267,7 +276,6 @@ function showInputScreen() {
 
 introStartBtn.addEventListener('click', () => {
   AudioService.setSrc('/audio/TP14sec.mp3');
-  // ★修正箇所: シェア用文言を更新
   currentShareText = '#タイパー大喜利 大会開催中！！　 #TimelessPower #MFゴースト #FullThrottle #フルスロ';
   showInputScreen();
 });
@@ -301,25 +309,18 @@ const confirmText = () => {
   const valB = textInputB.value;
 
   if (valA.length > 0 && valB.length > 0) {
-    
     const hasKanjiA = /[\u4E00-\u9FFF]/.test(valA);
     const hasKanjiB = /[\u4E00-\u9FFF]/.test(valB);
     
     if (hasKanjiA || hasKanjiB) {
-      alert(
-        "INVALID CHARACTERS DETECTED.\n" + 
-        "NO KANJI ALLOWED."
-      );
+      alert("INVALID CHARACTERS DETECTED.\nNO KANJI ALLOWED.");
       return; 
     }
 
     initScreamTexts(valA, valB);
-
     updateTitle('/images/LetsGo.png');
-    
     titleWrapper.classList.add('blink-fast');
     mainPlayBtn.classList.remove('hidden');
-    
     textInputA.blur();
     textInputB.blur();
   } else {
@@ -339,10 +340,7 @@ titleWrapper.addEventListener('click', () => {
 });
 
 backBtn.addEventListener('click', goBack);
-
-shareBtn.addEventListener('click', () => {
-  startRecordingProcess('share');
-});
+shareBtn.addEventListener('click', () => { startRecordingProcess('share'); });
 
 cancelBtn.addEventListener('click', () => {
   if (isRecording) {
@@ -397,7 +395,6 @@ async function startRecordingProcess(mode: 'share') {
   CanvasLogic.resetEffects();
   recentLayouts = [0];
   currentLayoutId = 0;
-  
   displayText = baseTextA;
 
   isRecording = true;
@@ -405,7 +402,6 @@ async function startRecordingProcess(mode: 'share') {
   openModal();
   
   const modalContent = recordingModal.querySelector('.modal-content')!;
-  
   const oldBtns = modalContent.querySelectorAll('.result-action-btn');
   oldBtns.forEach(btn => btn.remove());
   
