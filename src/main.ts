@@ -276,7 +276,8 @@ function showInputScreen() {
 
 introStartBtn.addEventListener('click', () => {
   AudioService.setSrc('/audio/TP14sec.mp3');
-  currentShareText = '#タイパー大喜利 大会開催中！！　 #TimelessPower #MFゴースト #FullThrottle #フルスロ';
+  // ★変更箇所：シェア時の文言を最終版に更新
+  currentShareText = '#TimelessPower #MFゴースト #FullThrottle #フルスロ #タイパー大喜利  #二言目でオトせ！';
   showInputScreen();
 });
 
